@@ -1,0 +1,1502 @@
+\documentclass[10pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Multi\_Islands\_GAs}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k+kn}{import} \PY{n}{arange}\PY{p}{,}\PY{n}{exp}\PY{p}{,}\PY{n}{sqrt}\PY{p}{,}\PY{n}{cos}\PY{p}{,}\PY{n}{e}\PY{p}{,}\PY{n}{pi}\PY{p}{,}\PY{n}{meshgrid}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{mpl\PYZus{}toolkits}\PY{n+nn}{.}\PY{n+nn}{mplot3d} \PY{k+kn}{import} \PY{n}{Axes3D}
+\PY{k+kn}{import} \PY{n+nn}{random}
+\PY{k+kn}{from} \PY{n+nn}{random} \PY{k+kn}{import} \PY{n}{sample}
+\PY{k+kn}{import} \PY{n+nn}{statistics}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{math}
+\PY{k+kn}{import} \PY{n+nn}{time}
+
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib}  
+\PY{n}{plt}\PY{o}{.}\PY{n}{ioff}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} Activa Grafica en ventana nueva}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-funcion-rastrigin}{%
+\section{Funcion FUNCION RASTRIGIN}\label{funcion-funcion-rastrigin}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{x1}\PY{p}{,}\PY{n}{x2}\PY{p}{,}\PY{n}{x3}\PY{p}{,}\PY{n}{x4}\PY{p}{,}\PY{n}{x5}\PY{p}{,}\PY{n}{x6}\PY{p}{)}\PY{p}{:}
+    \PY{k}{return} \PY{p}{(}\PY{n}{x1}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x1}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+           \PY{p}{(}\PY{n}{x2}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x2}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+           \PY{p}{(}\PY{n}{x3}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x3}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+           \PY{p}{(}\PY{n}{x4}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x4}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+           \PY{p}{(}\PY{n}{x5}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x5}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+           \PY{p}{(}\PY{n}{x6}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{x6}\PY{p}{)}\PY{p}{)} \PY{o}{+}  \PY{l+m+mi}{60}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-convertir-de-cadena-de-genes-a-decimal}{%
+\section{Funcion Convertir de cadena de genes a
+Decimal}\label{funcion-convertir-de-cadena-de-genes-a-decimal}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{lis2decimal}\PY{p}{(}\PY{n}{num}\PY{p}{)}\PY{p}{:}
+    \PY{k}{if} \PY{n}{num}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:}
+        \PY{n}{signo}\PY{o}{=}\PY{l+m+mi}{1}
+    \PY{k}{else}\PY{p}{:}
+        \PY{n}{signo}\PY{o}{=}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
+    \PY{n}{decimal}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{num}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{n}{decimal}\PY{o}{+}\PY{o}{=}\PY{n}{num}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{10}\PY{o}{*}\PY{o}{*}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{)}
+        
+    \PY{k}{return} \PY{n}{decimal}\PY{o}{*}\PY{n}{signo}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-convertir-x1x2x3x4x5x6-a-cadena-de-genes-valc1-y-valc2}{%
+\section{Funcion Convertir x1,x2,x3,x4,x5,x6 a cadena de genes valC1 Y
+valC2}\label{funcion-convertir-x1x2x3x4x5x6-a-cadena-de-genes-valc1-y-valc2}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{conv2cromos}\PY{p}{(}\PY{n}{pob}\PY{p}{)}\PY{p}{:}
+    \PY{n}{poblacion}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{comunity}\PY{o}{=} \PY{n}{pob}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} x1= 2.312345678910  cambia a  x1= [1 2, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1,0]}
+    \PY{c+c1}{\PYZsh{} se convertiran 6 cromosomas debido a que la funcion se define con 6 dimensiones, 1 por cada dimensión}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{comunity}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{}print(i)}
+        \PY{n}{crom1} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{crom2} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{crom3} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{crom4} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{crom5} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{n}{crom6} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{j}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{l}\PY{p}{,}\PY{n}{m}\PY{p}{,}\PY{n}{n}\PY{p}{,}\PY{n}{o} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}             print(j)}
+\PY{c+c1}{\PYZsh{}             print(k)}
+            \PY{n}{crom1} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{j}\PY{p}{]}
+            \PY{n}{crom2} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{k}\PY{p}{]}
+            \PY{n}{crom3} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{l}\PY{p}{]}
+            \PY{n}{crom4} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{m}\PY{p}{]}
+            \PY{n}{crom5} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{n}\PY{p}{]}
+            \PY{n}{crom6} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{o}\PY{p}{]}
+        \PY{n}{poblacion} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{p}{(}\PY{n}{crom1}\PY{p}{,}\PY{n}{crom2}\PY{p}{,}\PY{n}{crom3}\PY{p}{,}\PY{n}{crom4}\PY{p}{,}\PY{n}{crom5}\PY{p}{,}\PY{n}{crom6}\PY{p}{,}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} composicion de cada isleño, i[6] es su aptitud,}
+    \PY{n}{nuevos}\PY{o}{=} \PY{p}{[}\PY{p}{]}                                                   \PY{c+c1}{\PYZsh{} no se procesa}
+    \PY{n}{valC1}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{valC2}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{valC3}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{valC4}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{valC5}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{valC6}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}valC2=[]}
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{} numero de cromosoma a procesar}
+        \PY{k}{for} \PY{n}{cro} \PY{o+ow}{in} \PY{n}{poblacion}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} PRIMER caso: si != \PYZsq{}\PYZhy{}\PYZsq{} son valores POSITIVOS, despues se revisa si es de una o dos cifras como 13 o 7, }
+            \PY{n}{predef}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]} \PY{c+c1}{\PYZsh{} para CRO1}
+            \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{!=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
+                \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{c+c1}{\PYZsh{} Condicion de 1 cifra entera positivo}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{1}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{0}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{p}{]}\PY{o}{=} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{:}\PY{l+m+mi}{12}\PY{p}{]}
+                    \PY{n}{predef}\PY{o}{=}\PY{p}{[}\PY{n+nb}{int}\PY{p}{(}\PY{n}{i}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{predef}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Se guarda la cadena convertida de acuerdo al numero de cromosoma}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}                        \PY{c+c1}{\PYZsh{} cromosomas: x1 o x2 o x3 o x4 o x5 o x6 }
+                        \PY{n}{valC1} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+                        \PY{n}{valC2} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{2}\PY{p}{:}
+                        \PY{n}{valC3} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{3}\PY{p}{:}
+                        \PY{n}{valC4} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{4}\PY{p}{:}
+                        \PY{n}{valC5} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{5}\PY{p}{:}
+                        \PY{n}{valC6} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{n}{nuevos} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+
+                \PY{c+c1}{\PYZsh{}print(cro[0])}
+                \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{c+c1}{\PYZsh{} Condicion de 2 cifras enteras}
+                    \PY{c+c1}{\PYZsh{}print(cro[k])}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{1}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{p}{]}\PY{o}{=} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{l+m+mi}{13}\PY{p}{]}
+                    \PY{n}{predef}\PY{o}{=}\PY{p}{[}\PY{n+nb}{int}\PY{p}{(}\PY{n}{i}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{predef}\PY{p}{]} \PY{c+c1}{\PYZsh{} Se guarda la cadena convertida de acuerdo al numero de cromosoma}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}                       \PY{c+c1}{\PYZsh{} cromosomas: x1 o x2 o x3 o x4 o x5 o x6}
+                        \PY{n}{valC1} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+                        \PY{n}{valC2} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{2}\PY{p}{:}
+                        \PY{n}{valC3} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{3}\PY{p}{:}
+                        \PY{n}{valC4} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{4}\PY{p}{:}
+                        \PY{n}{valC5} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{5}\PY{p}{:}
+                        \PY{n}{valC6} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{n}{nuevos} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    
+            \PY{c+c1}{\PYZsh{} x1= 2.312345678910  cambia a  x1= [0 2, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1,0]}
+            \PY{c+c1}{\PYZsh{} SEGUNDO caso si == \PYZsq{}\PYZhy{}\PYZsq{} son valores NEGATIVOS, despues se revisa si es de una o dos cifras como \PYZhy{}13 o \PYZhy{}7, para CRO1}
+            \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
+                \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{c+c1}{\PYZsh{} Condicion de 2 cifras enteras negativo}
+                    \PY{c+c1}{\PYZsh{}print(cro[k])}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{0}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{0}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{p}{]}\PY{o}{=} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{l+m+mi}{13}\PY{p}{]}
+                    \PY{n}{predef}\PY{o}{=}\PY{p}{[}\PY{n+nb}{int}\PY{p}{(}\PY{n}{i}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{predef}\PY{p}{]} \PY{c+c1}{\PYZsh{} Se guarda la cadena convertida de acuerdo al numero de cromosoma}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}                       \PY{c+c1}{\PYZsh{} cromosomas: x1 o x2 o x3 o x4 o x5 o x6}
+                        \PY{n}{valC1} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+                        \PY{n}{valC2} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{2}\PY{p}{:}
+                        \PY{n}{valC3} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{3}\PY{p}{:}
+                        \PY{n}{valC4} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{4}\PY{p}{:}
+                        \PY{n}{valC5} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{5}\PY{p}{:}
+                        \PY{n}{valC6} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{n}{nuevos} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+
+                \PY{k}{if} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{c+c1}{\PYZsh{} Condicion de 1 cifra entera negativo}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{=}\PY{l+m+mi}{0}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{=}\PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+                    \PY{n}{predef}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{:}\PY{p}{]}\PY{o}{=} \PY{n}{cro}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{:}\PY{l+m+mi}{14}\PY{p}{]}
+                    \PY{n}{predef}\PY{o}{=}\PY{p}{[}\PY{n+nb}{int}\PY{p}{(}\PY{n}{i}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{predef}\PY{p}{]} \PY{c+c1}{\PYZsh{} Se guarda la cadena convertida de acuerdo al numero de cromosoma}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}                       \PY{c+c1}{\PYZsh{} cromosomas: x1 o x2 o x3 o x4 o x5 o x6}
+                        \PY{n}{valC1} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+                        \PY{n}{valC2} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{2}\PY{p}{:}
+                        \PY{n}{valC3} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{3}\PY{p}{:}
+                        \PY{n}{valC4} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{4}\PY{p}{:}
+                        \PY{n}{valC5} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{k}{if} \PY{n}{k} \PY{o}{==}\PY{l+m+mi}{5}\PY{p}{:}
+                        \PY{n}{valC6} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+                    \PY{n}{nuevos} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{predef}\PY{p}{]}
+    
+    \PY{k}{return} \PY{n}{valC1}\PY{p}{,}\PY{n}{valC2}\PY{p}{,}\PY{n}{valC3}\PY{p}{,}\PY{n}{valC4}\PY{p}{,}\PY{n}{valC5}\PY{p}{,}\PY{n}{valC6}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-cruza-n-puntos-aleatorios}{%
+\section{Funcion CRUZA N PUNTOS
+ALEATORIOS}\label{funcion-cruza-n-puntos-aleatorios}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{crossNpoints}\PY{p}{(}\PY{n}{hx1}\PY{p}{,}\PY{n}{hx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion CRUZA N PUNTOS, selecionado\PYZsq{})}
+    \PY{n}{cc}\PY{o}{=} \PY{n}{hx1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ss}\PY{o}{=} \PY{n}{hx2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{watdog}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{n}{desc1}\PY{o}{=}\PY{n}{cc}
+    \PY{n}{desc2}\PY{o}{=}\PY{n}{ss}
+    \PY{n}{valido}\PY{o}{=} \PY{k+kc}{False}
+    \PY{k}{while} \PY{n}{valido} \PY{o}{==} \PY{k+kc}{False}\PY{p}{:}
+        \PY{k}{if} \PY{n}{watdog} \PY{o}{==} \PY{l+m+mi}{1000}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{}print(\PYZsq{}Se alcanzo limite y no se encontro cromos validos: regresan los que entraron para evitar cambios\PYZsq{})}
+            \PY{k}{return} \PY{n}{desc1}\PY{p}{,}\PY{n}{desc2}
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Aqui se seccionan de acuerdo a los indice obtenidos aleatorio que determinaran el tamaño de seccion}
+        \PY{n}{cad11}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}  \PY{c+c1}{\PYZsh{} se seleccionan 4 puntos de corte para este caso}
+        \PY{n}{cad12}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cad13}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cad14}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        
+        \PY{n}{cad21}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cad22}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cad23}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        \PY{n}{cad24}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{n}{indice}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION CRUZAMIENTO N PUNTOS \PYZlt{}Aqui se juntan las secciones cortadas en diferentes puntos }
+        \PY{n}{desc1}\PY{o}{=} \PY{n}{cad11} \PY{o}{+} \PY{n}{cad22} \PY{o}{+} \PY{n}{cad13} \PY{o}{+} \PY{n}{cad24} \PY{c+c1}{\PYZsh{} con diferentes tamaños\PYZgt{}, por ejemplo:}
+        \PY{n}{desc2}\PY{o}{=} \PY{n}{cad21} \PY{o}{+} \PY{n}{cad12} \PY{o}{+} \PY{n}{cad23} \PY{o}{+} \PY{n}{cad14} \PY{c+c1}{\PYZsh{} [1,2,3] + [7,6,3,4,5] + [2,3] + [2,5,6] \PYZhy{}\PYZhy{}\PYZgt{} desc1}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} Seccion verifica que cadenas convertidas a decimal esten en rango de la funcion RASTRIGIN [\PYZhy{}5.12 5.12]}
+        \PY{n}{valorfx1}\PY{p}{,}\PY{n}{valorfx2}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{desc1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{desc2}\PY{p}{)}
+        \PY{k}{if} \PY{n}{valorfx1} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx1} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx2} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx2} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}\PY{p}{:}
+            \PY{n}{valido}\PY{o}{=} \PY{k+kc}{True}
+            \PY{k}{return} \PY{n}{desc1}\PY{p}{,}\PY{n}{desc2}
+
+        \PY{n}{indice}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}
+        \PY{n}{indice}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{indice}\PY{p}{)}
+        \PY{n}{watdog} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+
+    \PY{k}{return} \PY{n}{desc1}\PY{p}{,}\PY{n}{desc2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-cruza-2-puntos-aleatorios}{%
+\section{Funcion CRUZA 2 PUNTOS
+ALEATORIOS}\label{funcion-cruza-2-puntos-aleatorios}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{cross2points}\PY{p}{(}\PY{n}{hx1}\PY{p}{,}\PY{n}{hx2}\PY{p}{,}\PY{n}{indices}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion CRUZA 2 PUNTOS, selecionado\PYZsq{})}
+    \PY{n}{c}\PY{p}{,}\PY{n}{cc}\PY{o}{=} \PY{n}{hx1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{hx1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{s}\PY{p}{,}\PY{n}{ss}\PY{o}{=} \PY{n}{hx2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{hx2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{watdog}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{n}{desc1}\PY{o}{=}\PY{n}{cc}
+    \PY{n}{desc2}\PY{o}{=}\PY{n}{ss}
+    \PY{n}{valido}\PY{o}{=} \PY{k+kc}{False}
+    \PY{k}{while} \PY{n}{valido} \PY{o}{==} \PY{k+kc}{False}\PY{p}{:}
+        \PY{k}{if} \PY{n}{watdog} \PY{o}{==} \PY{l+m+mi}{1000}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{}print(\PYZsq{}Se alcanzo limite y no se encontro cromos validos: Regresan los que entraron para evitar cambios\PYZsq{})}
+            \PY{k}{return} \PY{n}{desc1}\PY{p}{,}\PY{n}{desc2} 
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Se corta en 2 indice dados aleatorios, y se secciona de acuerdo al tamaño dado por los puntos de corte }
+        \PY{n}{secc\PYZus{}cc}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}
+        \PY{n}{secc\PYZus{}ss}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]} 
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION CRUZAMIENTO 2 PUNTOS: se insertan los nuevos genes a los descendientes}
+        \PY{n}{desc1}\PY{o}{=} \PY{n}{cc}\PY{p}{[}\PY{p}{:}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}ss} \PY{o}{+} \PY{n}{cc}\PY{p}{[}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} [324] + [548235] + [245] \PYZhy{}\PYZhy{}\PYZgt{} desc1}
+        \PY{n}{desc2}\PY{o}{=} \PY{n}{ss}\PY{p}{[}\PY{p}{:}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}cc} \PY{o}{+} \PY{n}{ss}\PY{p}{[}\PY{n}{indices}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} [164] + [245657] + [543] \PYZhy{}\PYZhy{}\PYZgt{} desc2}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} Seccion verifica que cadenas convertidas a decimal esten en rango de la funcion RASTRIGIN}
+        \PY{n}{valorfx1}\PY{p}{,}\PY{n}{valorfx2}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{desc1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{desc2}\PY{p}{)}
+        \PY{k}{if} \PY{n}{valorfx1} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx1} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx2} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{valorfx2} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}\PY{p}{:}
+            \PY{n}{valido}\PY{o}{=} \PY{k+kc}{True}
+            \PY{k}{return} \PY{n}{desc1}\PY{p}{,}\PY{n}{desc2}
+        
+        \PY{n}{indices}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}
+        \PY{n}{indices}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{indices}\PY{p}{)}
+        \PY{n}{watdog} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}  \PY{c+c1}{\PYZsh{} Contador de control}
+            
+    \PY{k}{return} \PY{n}{c}\PY{p}{,}\PY{n}{s}  \PY{c+c1}{\PYZsh{} SI NO ENCUENTRA DESCENDEINTES VALIDOS RETORNAN LOS QUE ENTRARON PARA EVITAR CAMBIOS}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{mutacion-scramble}{%
+\section{Mutacion SCRAMBLE}\label{mutacion-scramble}}
+
+\hypertarget{se-selecciona-un-subconjunto-de-genes-y-se-reordena-aleatoriamente-los-alelos-el-subconjunto-no-tiene-por-quuxe9-ser-contiguo.}{%
+\subsubsection{Se selecciona un subconjunto de genes y se reordena
+aleatoriamente los alelos (el subconjunto no tiene por qué ser
+contiguo).}\label{se-selecciona-un-subconjunto-de-genes-y-se-reordena-aleatoriamente-los-alelos-el-subconjunto-no-tiene-por-quuxe9-ser-contiguo.}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{mutacion\PYZus{}Scramble}\PY{p}{(}\PY{n}{mut1}\PY{p}{,}\PY{n}{mut2}\PY{p}{,}\PY{n}{mut3}\PY{p}{,}\PY{n}{mut4}\PY{p}{,}\PY{n}{mut5}\PY{p}{,}\PY{n}{mut6}\PY{p}{,}\PY{n}{size}\PY{p}{,}\PY{n}{cutin}\PY{p}{,}\PY{n}{cut\PYZus{}ind}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion MUTACION SCRAMBLE, selecionado\PYZsq{})}
+    \PY{n}{c1}\PY{p}{,}\PY{n}{chrom1}\PY{o}{=} \PY{n}{mut1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{c2}\PY{p}{,}\PY{n}{chrom2}\PY{o}{=} \PY{n}{mut2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{c3}\PY{p}{,}\PY{n}{chrom3}\PY{o}{=} \PY{n}{mut3}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut3}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{c4}\PY{p}{,}\PY{n}{chrom4}\PY{o}{=} \PY{n}{mut4}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut4}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{c5}\PY{p}{,}\PY{n}{chrom5}\PY{o}{=} \PY{n}{mut5}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut5}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{c6}\PY{p}{,}\PY{n}{chrom6}\PY{o}{=} \PY{n}{mut6}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut6}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{size\PYZus{}cut}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{,}\PY{n}{cut\PYZus{}index}\PY{o}{=} \PY{n}{size}\PY{p}{,}\PY{n}{cutin}\PY{p}{,}\PY{n}{cut\PYZus{}ind}
+    \PY{n}{watdog}\PY{o}{=} \PY{l+m+mi}{0}
+    \PY{n}{descmut1}\PY{o}{=} \PY{n}{chrom1}
+    \PY{n}{descmut2}\PY{o}{=} \PY{n}{chrom2}
+    \PY{n}{descmut3}\PY{o}{=} \PY{n}{chrom3}
+    \PY{n}{descmut4}\PY{o}{=} \PY{n}{chrom4}
+    \PY{n}{descmut5}\PY{o}{=} \PY{n}{chrom5}
+    \PY{n}{descmut6}\PY{o}{=} \PY{n}{chrom6}
+    \PY{n}{valido}\PY{o}{=} \PY{k+kc}{False}
+    \PY{k}{while} \PY{n}{valido}\PY{o}{==}\PY{k+kc}{False}\PY{p}{:}
+        \PY{k}{if} \PY{n}{watdog} \PY{o}{==} \PY{l+m+mi}{1000}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{}print(\PYZsq{}Se alcanzo limite y no se encontro cromos validos: Retornan los que entraron para evitar cambios\PYZsq{})}
+            \PY{k}{return} \PY{n}{descmut1}\PY{p}{,}\PY{n}{descmut2}\PY{p}{,}\PY{n}{descmut3}\PY{p}{,}\PY{n}{descmut4}\PY{p}{,}\PY{n}{descmut5}\PY{p}{,}\PY{n}{descmut6} 
+        \PY{n}{secc\PYZus{}c1}\PY{o}{=} \PY{n}{chrom1}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}c2}\PY{o}{=} \PY{n}{chrom2}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}c3}\PY{o}{=} \PY{n}{chrom3}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}c4}\PY{o}{=} \PY{n}{chrom4}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}c5}\PY{o}{=} \PY{n}{chrom5}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}c6}\PY{o}{=} \PY{n}{chrom6}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        
+        \PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c1}\PY{p}{)}\PY{p}{,}\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c2}\PY{p}{)}\PY{p}{,}\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c3}\PY{p}{)}\PY{p}{,} \PY{c+c1}{\PYZsh{} Aqui se reordenan los genes selectos}
+        \PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c4}\PY{p}{)}\PY{p}{,}\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c5}\PY{p}{)}\PY{p}{,}\PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{secc\PYZus{}c6}\PY{p}{)}\PY{p}{,} \PY{c+c1}{\PYZsh{} para su reordenamiento}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Se reinsertan las seccion reordenada para crear los descendientes mutados}
+        \PY{n}{descmut1}\PY{o}{=} \PY{n}{chrom1}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c1} \PY{o}{+} \PY{n}{chrom1}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} NO SE INTERCAMBIAN ENTRE CROMOSOMAS,}
+        \PY{n}{descmut2}\PY{o}{=} \PY{n}{chrom2}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c2} \PY{o}{+} \PY{n}{chrom2}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} SON DOS PORQUE SE MANDAN X1 Y X2,  }
+        \PY{n}{descmut3}\PY{o}{=} \PY{n}{chrom3}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c3} \PY{o}{+} \PY{n}{chrom3}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} SOLO SE REORDENAN INTERNAMENTE}
+        \PY{n}{descmut4}\PY{o}{=} \PY{n}{chrom4}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c4} \PY{o}{+} \PY{n}{chrom4}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} [4821] + [3657841] + [1954] \PYZhy{}\PYZhy{}\PYZhy{}\PYZgt{} descx}
+        \PY{n}{descmut5}\PY{o}{=} \PY{n}{chrom5}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c5} \PY{o}{+} \PY{n}{chrom5}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]}
+        \PY{n}{descmut6}\PY{o}{=} \PY{n}{chrom6}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}c6} \PY{o}{+} \PY{n}{chrom6}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} Se convierten a flotante para su validación}
+        \PY{n}{v1}\PY{p}{,}\PY{n}{v2}\PY{p}{,}\PY{n}{v3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut3}\PY{p}{)}
+        \PY{n}{v4}\PY{p}{,}\PY{n}{v5}\PY{p}{,}\PY{n}{v6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut5}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut6}\PY{p}{)}
+        \PY{k}{if} \PY{n}{v1} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v1} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v2} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v2} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v3} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v3} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v4} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v4} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v5} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v5} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v6} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v6} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{p}{:}
+            \PY{n}{valido}\PY{o}{=} \PY{k+kc}{True} 
+            \PY{k}{return} \PY{n}{descmut1}\PY{p}{,}\PY{n}{descmut2}\PY{p}{,}\PY{n}{descmut3}\PY{p}{,}\PY{n}{descmut4}\PY{p}{,}\PY{n}{descmut5}\PY{p}{,}\PY{n}{descmut6}  \PY{c+c1}{\PYZsh{} Retorna los descendientes nuevos validos}
+        
+        \PY{k}{elif} \PY{n}{watdog} \PY{o}{\PYZgt{}} \PY{l+m+mi}{30}\PY{p}{:}   \PY{c+c1}{\PYZsh{} En caso de que no sean validos y son mas de 30 iteraciones busca un nuevo indice de corte}
+            \PY{n}{size\PYZus{}cut}\PY{o}{=}\PY{l+m+mi}{4}                                                                
+            \PY{n}{cutinrange}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{chrom1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{size\PYZus{}cut}
+            \PY{n}{cut\PYZus{}index}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{)}
+        \PY{n}{watdog} \PY{o}{=} \PY{n}{watdog}\PY{o}{+}\PY{l+m+mi}{1} \PY{c+c1}{\PYZsh{} control de busqueda de cromosomas mutados }
+    \PY{c+c1}{\PYZsh{} Retornan los que entraron para evitar cambios en caso de NO encontrar validos}
+    \PY{k}{return} \PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{,}\PY{n}{c3}\PY{p}{,}\PY{n}{c4}\PY{p}{,}\PY{n}{c5}\PY{p}{,}\PY{n}{c6}  
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-mutacion-inversiuxf3n}{%
+\section{Funcion MUTACION
+INVERSIÓN}\label{funcion-mutacion-inversiuxf3n}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{mutacion\PYZus{}Inversion}\PY{p}{(}\PY{n}{mut1}\PY{p}{,}\PY{n}{mut2}\PY{p}{,}\PY{n}{mut3}\PY{p}{,}\PY{n}{mut4}\PY{p}{,}\PY{n}{mut5}\PY{p}{,}\PY{n}{mut6}\PY{p}{,}\PY{n}{size}\PY{p}{,}\PY{n}{cutin}\PY{p}{,}\PY{n}{cut\PYZus{}ind}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion MUTACION INVERSION, selecionado\PYZsq{})}
+    \PY{n}{ch1}\PY{p}{,}\PY{n}{chrom1}\PY{o}{=} \PY{n}{mut1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut1}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch2}\PY{p}{,}\PY{n}{chrom2}\PY{o}{=} \PY{n}{mut2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut2}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch3}\PY{p}{,}\PY{n}{chrom3}\PY{o}{=} \PY{n}{mut3}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut3}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch4}\PY{p}{,}\PY{n}{chrom4}\PY{o}{=} \PY{n}{mut4}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut4}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch5}\PY{p}{,}\PY{n}{chrom5}\PY{o}{=} \PY{n}{mut5}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut5}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch6}\PY{p}{,}\PY{n}{chrom6}\PY{o}{=} \PY{n}{mut6}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{mut6}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{size\PYZus{}cut}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{,}\PY{n}{cut\PYZus{}index}\PY{o}{=} \PY{n}{size}\PY{p}{,}\PY{n}{cutin}\PY{p}{,}\PY{n}{cut\PYZus{}ind}
+    \PY{n}{watdog}\PY{o}{=} \PY{l+m+mi}{0}
+    \PY{n}{descmut1}\PY{o}{=} \PY{n}{chrom1}
+    \PY{n}{descmut2}\PY{o}{=} \PY{n}{chrom2}
+    \PY{n}{descmut3}\PY{o}{=} \PY{n}{chrom3}
+    \PY{n}{descmut4}\PY{o}{=} \PY{n}{chrom4}
+    \PY{n}{descmut5}\PY{o}{=} \PY{n}{chrom5}
+    \PY{n}{descmut6}\PY{o}{=} \PY{n}{chrom6} 
+    \PY{n}{valido}\PY{o}{=} \PY{k+kc}{False}
+    \PY{k}{while} \PY{n}{valido}\PY{o}{==}\PY{k+kc}{False}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{}print(\PYZsq{}Mutacion\PYZsq{},watdog)}
+        \PY{k}{if} \PY{n}{watdog} \PY{o}{==} \PY{l+m+mi}{1000}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{}print(\PYZsq{}Se alcanzo limite y no se encontro cromos validos: Retornan los que entraron para evitar cambios\PYZsq{})}
+            \PY{k}{return} \PY{n}{mut1}\PY{p}{,}\PY{n}{mut2}\PY{p}{,}\PY{n}{mut3}\PY{p}{,}\PY{n}{mut4}\PY{p}{,}\PY{n}{mut5}\PY{p}{,}\PY{n}{mut6} 
+        \PY{n}{secc\PYZus{}s1}\PY{o}{=} \PY{n}{chrom1}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}s2}\PY{o}{=} \PY{n}{chrom2}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}s3}\PY{o}{=} \PY{n}{chrom3}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}s4}\PY{o}{=} \PY{n}{chrom4}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}s5}\PY{o}{=} \PY{n}{chrom5}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        \PY{n}{secc\PYZus{}s6}\PY{o}{=} \PY{n}{chrom6}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} Se secciona cada cromosoma dado el tamaño de corte para su mutacion y se invierten sus posiciones}
+        \PY{n}{secc\PYZus{}s1}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{secc\PYZus{}s2}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{secc\PYZus{}s3}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{secc\PYZus{}s4}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{secc\PYZus{}s5}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}\PY{p}{,}\PY{n}{secc\PYZus{}s6}\PY{o}{.}\PY{n}{reverse}\PY{p}{(}\PY{p}{)}
+        
+        \PY{n}{descmut1}\PY{o}{=} \PY{n}{chrom1}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s1} \PY{o}{+} \PY{n}{chrom1}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} Se forma la nueva cadena con la seccion }
+        \PY{n}{descmut2}\PY{o}{=} \PY{n}{chrom2}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s2} \PY{o}{+} \PY{n}{chrom2}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} invertida para realizar mutacion}
+        \PY{n}{descmut3}\PY{o}{=} \PY{n}{chrom3}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s3} \PY{o}{+} \PY{n}{chrom3}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} [75821] + [125] + [75978] \PYZhy{}\PYZhy{}\PYZgt{} descmutx}
+        \PY{n}{descmut4}\PY{o}{=} \PY{n}{chrom4}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s4} \PY{o}{+} \PY{n}{chrom4}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]} \PY{c+c1}{\PYZsh{}\PYZsh{} [75821] + [125] + [75978] \PYZhy{}\PYZhy{}\PYZgt{} descmutx}
+        \PY{n}{descmut5}\PY{o}{=} \PY{n}{chrom5}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s5} \PY{o}{+} \PY{n}{chrom5}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]}
+        \PY{n}{descmut6}\PY{o}{=} \PY{n}{chrom6}\PY{p}{[}\PY{p}{:}\PY{n}{cut\PYZus{}index}\PY{p}{]} \PY{o}{+} \PY{n}{secc\PYZus{}s6} \PY{o}{+} \PY{n}{chrom6}\PY{p}{[}\PY{n}{cut\PYZus{}index}\PY{o}{+}\PY{n}{size\PYZus{}cut}\PY{p}{:}\PY{p}{]}
+        
+        \PY{n}{v1}\PY{p}{,}\PY{n}{v2}\PY{p}{,}\PY{n}{v3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut3}\PY{p}{)}
+        \PY{n}{v4}\PY{p}{,}\PY{n}{v5}\PY{p}{,}\PY{n}{v6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut5}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{descmut6}\PY{p}{)}
+        \PY{k}{if} \PY{n}{v1} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v1} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v2} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v2} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v3} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v3} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v4} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v4} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v5} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v5} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}  \PY{o+ow}{and} \PY{n}{v6} \PY{o}{\PYZlt{}} \PY{l+m+mf}{5.12} \PY{o+ow}{and} \PY{n}{v6} \PY{o}{\PYZgt{}} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12} \PY{p}{:}
+            \PY{n}{valido}\PY{o}{=} \PY{k+kc}{True} 
+            \PY{k}{return} \PY{n}{descmut1}\PY{p}{,}\PY{n}{descmut2}\PY{p}{,}\PY{n}{descmut3}\PY{p}{,}\PY{n}{descmut4}\PY{p}{,}\PY{n}{descmut5}\PY{p}{,}\PY{n}{descmut6}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} RETORNA CROMOSOMAS MUTADOS VALIDOS}
+
+        \PY{n}{size\PYZus{}cut}\PY{o}{=}\PY{l+m+mi}{4}
+        \PY{n}{cutinrange}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{chrom1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{size\PYZus{}cut}
+        \PY{n}{cut\PYZus{}index}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{)}
+        \PY{n}{watdog} \PY{o}{=} \PY{n}{watdog}\PY{o}{+}\PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{ch1}\PY{p}{,}\PY{n}{ch2}\PY{p}{,}\PY{n}{ch3}\PY{p}{,}\PY{n}{ch4}\PY{p}{,}\PY{n}{ch5}\PY{p}{,}\PY{n}{ch6} \PY{c+c1}{\PYZsh{} Retornan los que entraron para evitar cambios}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-seleccion-torneo}{%
+\section{Funcion SELECCION TORNEO}\label{funcion-seleccion-torneo}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{selTorneo}\PY{p}{(}\PY{n}{cromosomas}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion SELECCION TORNEO, selecionado\PYZsq{})}
+    \PY{n}{ch1}\PY{o}{=} \PY{n}{cromosomas}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{newpob1}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{indiv}\PY{o}{=} \PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+        \PY{n}{gx1}\PY{p}{,}\PY{n}{gx2}\PY{p}{,}\PY{n}{gx3}\PY{o}{=} \PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+        \PY{n}{gx4}\PY{p}{,}\PY{n}{gx5}\PY{p}{,}\PY{n}{gx6}\PY{o}{=} \PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}
+            
+        \PY{n}{gxx1}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{gxx3}\PY{o}{=} \PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+        \PY{n}{gxx4}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{gxx6}\PY{o}{=} \PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{ch1}\PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch1}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{n}{indiv}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}
+            
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza 2 puntos}
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x1 y 2.\PYZhy{} xx1}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x2 y 2.\PYZhy{} xx2}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x3 y 2.\PYZhy{} xx3}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x4 y 2.\PYZhy{} xx4}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x5 y 2.\PYZhy{} xx5}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x6 y 2.\PYZhy{} xx6}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza n puntos  }
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+
+        \PY{n}{newpob1} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offx1}\PY{p}{,}\PY{n}{offx2}\PY{p}{,}\PY{n}{offx3}\PY{p}{,}\PY{n}{offx4}\PY{p}{,}\PY{n}{offx5}\PY{p}{,}\PY{n}{offx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{newpob1} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offxx1}\PY{p}{,}\PY{n}{offxx2}\PY{p}{,}\PY{n}{offxx3}\PY{p}{,}\PY{n}{offxx4}\PY{p}{,}\PY{n}{offxx5}\PY{p}{,}\PY{n}{offxx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{indiv} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+    
+    \PY{k}{return} \PY{n}{newpob1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-seleccion-rank}{%
+\section{Funcion SELECCION RANK}\label{funcion-seleccion-rank}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{selRank}\PY{p}{(}\PY{n}{cromosomas}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion SELECCION RANK, selecionado\PYZsq{})}
+    \PY{n}{ch2}\PY{o}{=} \PY{n}{cromosomas}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{newpob2}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{indiv}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch2}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}            
+        \PY{n}{gx1}\PY{p}{,}\PY{n}{gx2}\PY{p}{,}\PY{n}{gx3}\PY{o}{=} \PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de primer sexteto de cromosomas a}
+        \PY{n}{gx4}\PY{p}{,}\PY{n}{gx5}\PY{p}{,}\PY{n}{gx6}\PY{o}{=} \PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cruzar }
+
+        \PY{n}{gxx1}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{gxx3}\PY{o}{=} \PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de Segundo sexteto de}
+        \PY{n}{gxx4}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{gxx6}\PY{o}{=} \PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{ch2}\PY{p}{[}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{indiv}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cromosomas a cruzar}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza 2 puntos}
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x1 y 2.\PYZhy{} xx1}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x2 y 2.\PYZhy{} xx2}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x3 y 2.\PYZhy{} xx3}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x4 y 2.\PYZhy{} xx4}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x5 y 2.\PYZhy{} xx5}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x6 y 2.\PYZhy{} xx6}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza n puntos  }
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+
+        \PY{n}{newpob2} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offx1}\PY{p}{,}\PY{n}{offx2}\PY{p}{,}\PY{n}{offx3}\PY{p}{,}\PY{n}{offx4}\PY{p}{,}\PY{n}{offx5}\PY{p}{,}\PY{n}{offx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{newpob2} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offxx1}\PY{p}{,}\PY{n}{offxx2}\PY{p}{,}\PY{n}{offxx3}\PY{p}{,}\PY{n}{offxx4}\PY{p}{,}\PY{n}{offxx5}\PY{p}{,}\PY{n}{offxx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{indiv} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{newpob2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-seleccion-random-monogamico}{%
+\section{Funcion SELECCION RANDOM
+MONOGAMICO}\label{funcion-seleccion-random-monogamico}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{selMonogamico}\PY{p}{(}\PY{n}{cromosomas}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion SELECCION MONOGAMICO, selecionado\PYZsq{})}
+    \PY{n}{ch3}\PY{o}{=} \PY{n}{cromosomas}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{ch3randomizados}\PY{o}{=} \PY{n}{cromosomas}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)} \PY{c+c1}{\PYZsh{} Se hace una copia de la lista de cromosomas para reacomodarlos aleatoriamente}
+    \PY{n}{random}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{ch3randomizados}\PY{p}{)}    \PY{c+c1}{\PYZsh{} y se estraen 2 a la vez para realizar la cruzar}
+    \PY{n}{newpob3}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{indiv}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch3}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+        \PY{n}{hab1}\PY{o}{=} \PY{n}{ch3randomizados}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n}{hab2}\PY{o}{=} \PY{n}{ch3randomizados}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+
+        \PY{n}{gx1}\PY{p}{,}\PY{n}{gx2}\PY{p}{,}\PY{n}{gx3}\PY{o}{=} \PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de primer sexteto de cromosomas a}
+        \PY{n}{gx4}\PY{p}{,}\PY{n}{gx5}\PY{p}{,}\PY{n}{gx6}\PY{o}{=} \PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cruzar }
+
+        \PY{n}{gxx1}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{gxx3}\PY{o}{=} \PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de Segundo sexteto de}
+        \PY{n}{gxx4}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{gxx6}\PY{o}{=} \PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cromosomas a cruzar}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza 2 puntos}
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x1 y 2.\PYZhy{} xx1}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x2 y 2.\PYZhy{} xx2}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x3 y 2.\PYZhy{} xx3}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x4 y 2.\PYZhy{} xx4}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x5 y 2.\PYZhy{} xx5}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x6 y 2.\PYZhy{} xx6}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza n puntos  }
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+
+        \PY{n}{newpob3} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offx1}\PY{p}{,}\PY{n}{offx2}\PY{p}{,}\PY{n}{offx3}\PY{p}{,}\PY{n}{offx4}\PY{p}{,}\PY{n}{offx5}\PY{p}{,}\PY{n}{offx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{newpob3} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offxx1}\PY{p}{,}\PY{n}{offxx2}\PY{p}{,}\PY{n}{offxx3}\PY{p}{,}\PY{n}{offxx4}\PY{p}{,}\PY{n}{offxx5}\PY{p}{,}\PY{n}{offxx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{indiv} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+    
+    \PY{k}{return} \PY{n}{newpob3}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-seleccion-ruleta}{%
+\section{Funcion SELECCION RULETA}\label{funcion-seleccion-ruleta}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{selRuleta}\PY{p}{(}\PY{n}{cromosomas}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{,}\PY{n}{odds}\PY{p}{)}\PY{p}{:}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Funcion SELECCION RULETA, selecionado\PYZsq{})}
+    \PY{n}{ch4}\PY{o}{=} \PY{n}{cromosomas}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{n}{newpob4}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{n}{indiv}\PY{o}{=}\PY{l+m+mi}{0}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch4}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{:}
+        \PY{n}{gen}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{choice}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ch4}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{p}\PY{o}{=}\PY{n}{odds}\PY{p}{)} \PY{c+c1}{\PYZsh{} Selecciona 2 indices de todos los cromosomas de acuerdo a su aptitud}
+        \PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{o}{=} \PY{n}{ch4}\PY{p}{[}\PY{n}{gen}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{,}\PY{n}{ch4}\PY{p}{[}\PY{n}{gen}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}             \PY{c+c1}{\PYZsh{} se separan en a y b y se obtienen los cromosomas individuales a[x] y b[x]}
+        
+        \PY{n}{gx1}\PY{p}{,}\PY{n}{gx2}\PY{p}{,}\PY{n}{gx3}\PY{o}{=} \PY{n}{a}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{a}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{a}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de primer sexteto de cromosomas a}
+        \PY{n}{gx4}\PY{p}{,}\PY{n}{gx5}\PY{p}{,}\PY{n}{gx6}\PY{o}{=} \PY{n}{a}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{a}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{a}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cruzar }
+
+        \PY{n}{gxx1}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{gxx3}\PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de Segundo sexteto de}
+        \PY{n}{gxx4}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{gxx6}\PY{o}{=} \PY{n}{b}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cromosomas a cruzar}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza 2 puntos}
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x1 y 2.\PYZhy{} xx1}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x2 y 2.\PYZhy{} xx2}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x3 y 2.\PYZhy{} xx3}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x4 y 2.\PYZhy{} xx4}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x5 y 2.\PYZhy{} xx5}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{cross2points}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indices}\PY{p}{)} \PY{c+c1}{\PYZsh{} 1.\PYZhy{} x6 y 2.\PYZhy{} xx6}
+
+        \PY{k}{if} \PY{n}{tipoC}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}  \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} Tipo cruza n puntos  }
+            \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+            \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+
+        \PY{n}{newpob4} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offx1}\PY{p}{,}\PY{n}{offx2}\PY{p}{,}\PY{n}{offx3}\PY{p}{,}\PY{n}{offx4}\PY{p}{,}\PY{n}{offx5}\PY{p}{,}\PY{n}{offx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{newpob4} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{offxx1}\PY{p}{,}\PY{n}{offxx2}\PY{p}{,}\PY{n}{offxx3}\PY{p}{,}\PY{n}{offxx4}\PY{p}{,}\PY{n}{offxx5}\PY{p}{,}\PY{n}{offxx6}\PY{p}{)}\PY{p}{]}
+        \PY{n}{indiv} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        
+    \PY{k}{return} \PY{n}{newpob4}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{creacion-de-isleuxf1os-de-comunidades-iniciales}{%
+\section{Creacion de Isleños de comunidades
+iniciales}\label{creacion-de-isleuxf1os-de-comunidades-iniciales}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{pobisla}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{:}
+    \PY{n}{valMin}\PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}       \PY{c+c1}{\PYZsh{} rango minimo para x1, x2, x3, x4, x5 y x6}
+    \PY{n}{valMax}\PY{o}{=}  \PY{l+m+mf}{5.12}       \PY{c+c1}{\PYZsh{} rango maximo para x1, x2, x3, x4, x5 y x6}
+    \PY{c+c1}{\PYZsh{}numCromos= 100      \PYZsh{} Numero de pobladores}
+
+    \PY{n}{com\PYZus{}1}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 1}
+    \PY{n}{com\PYZus{}2}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 2}
+    \PY{n}{com\PYZus{}3}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 3}
+    \PY{n}{com\PYZus{}4}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 4}
+    \PY{n}{com\PYZus{}5}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 5}
+    \PY{n}{com\PYZus{}6}\PY{o}{=} \PY{p}{[} \PY{n}{random}\PY{o}{.}\PY{n}{uniform}\PY{p}{(}\PY{n}{valMin}\PY{p}{,}\PY{n}{valMax}\PY{p}{)} \PY{k}{for} \PY{n}{x1} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{numCromos}\PY{p}{)}\PY{p}{]} \PY{c+c1}{\PYZsh{} Alelos 6}
+
+    \PY{n}{archi}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{positions}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{odds}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{,}\PY{n}{c3}\PY{p}{,}\PY{n}{c4}\PY{p}{,}\PY{n}{c5}\PY{p}{,}\PY{n}{c6} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{com\PYZus{}1}\PY{p}{,}\PY{n}{com\PYZus{}2}\PY{p}{,}\PY{n}{com\PYZus{}3}\PY{p}{,}\PY{n}{com\PYZus{}4}\PY{p}{,}\PY{n}{com\PYZus{}5}\PY{p}{,}\PY{n}{com\PYZus{}6}\PY{p}{)}\PY{p}{:}
+        \PY{n}{fx}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{,}\PY{n}{c3}\PY{p}{,}\PY{n}{c4}\PY{p}{,}\PY{n}{c5}\PY{p}{,}\PY{n}{c6}\PY{p}{)}
+        \PY{n}{archi}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c1}\PY{p}{)}\PY{p}{,}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c2}\PY{p}{)}\PY{p}{,}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c3}\PY{p}{)}\PY{p}{,}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c4}\PY{p}{)}\PY{p}{,}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c5}\PY{p}{)}\PY{p}{,}\PY{n+nb}{str}\PY{p}{(}\PY{n}{c6}\PY{p}{)}\PY{p}{,}\PY{n}{fx}\PY{p}{)}\PY{p}{]}
+        \PY{n}{odds}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{fx}\PY{p}{]}
+        \PY{n}{fx1}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{c1}\PY{p}{,}\PY{n}{c2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n}{positions} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{n}{fx1}\PY{p}{]}   \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{} datos para grafica, solo 2 dimensiones}
+
+    \PY{n}{odds}\PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{odds}\PY{p}{)}
+    \PY{n}{odds}\PY{o}{=} \PY{n}{odds}\PY{o}{/}\PY{n}{odds}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{va1}\PY{p}{,}\PY{n}{va2}\PY{p}{,}\PY{n}{va3}\PY{p}{,}\PY{n}{va4}\PY{p}{,}\PY{n}{va5}\PY{p}{,}\PY{n}{va6}\PY{o}{=} \PY{n}{conv2cromos}\PY{p}{(}\PY{n}{archi}\PY{p}{)}
+
+    \PY{n}{ComInicial}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{isle1}\PY{p}{,}\PY{n}{isle2}\PY{p}{,}\PY{n}{isle3}\PY{p}{,}\PY{n}{isle4}\PY{p}{,}\PY{n}{isle5}\PY{p}{,}\PY{n}{isle6} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{va1}\PY{p}{,}\PY{n}{va2}\PY{p}{,}\PY{n}{va3}\PY{p}{,}\PY{n}{va4}\PY{p}{,}\PY{n}{va5}\PY{p}{,}\PY{n}{va6}\PY{p}{)}\PY{p}{:}
+        \PY{n}{i1}\PY{p}{,}\PY{n}{i2}\PY{p}{,}\PY{n}{i3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle3}\PY{p}{)}
+        \PY{n}{i4}\PY{p}{,}\PY{n}{i5}\PY{p}{,}\PY{n}{i6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle5}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{isle6}\PY{p}{)}
+        \PY{n}{Fx}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{i1}\PY{p}{,}\PY{n}{i2}\PY{p}{,}\PY{n}{i3}\PY{p}{,}\PY{n}{i4}\PY{p}{,}\PY{n}{i5}\PY{p}{,}\PY{n}{i6}\PY{p}{)}
+        \PY{n}{ComInicial} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{p}{(}\PY{n}{isle1}\PY{p}{,}\PY{n}{isle2}\PY{p}{,}\PY{n}{isle3}\PY{p}{,}\PY{n}{isle4}\PY{p}{,}\PY{n}{isle5}\PY{p}{,}\PY{n}{isle6}\PY{p}{,}\PY{n}{Fx}\PY{p}{)}\PY{p}{]}
+
+    \PY{n}{ComInicial}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{ComInicial}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{ComInicial}\PY{p}{:} \PY{n}{ComInicial}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{ComInicial}\PY{p}{,}\PY{n}{odds}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-evolucion-de-archipielago}{%
+\section{Funcion EVOLUCION DE
+ARCHIPIELAGO}\label{funcion-evolucion-de-archipielago}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{evolucion}\PY{p}{(}\PY{n}{pob}\PY{p}{,}\PY{n}{tipoS}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{tipoM}\PY{p}{,}\PY{n}{odds}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} tipoC: Tipo de Cruza: PMX OR OX.  tipoM: Tipo de Mutacion: Scramble or Heuristica }
+    \PY{n}{oldG}\PY{o}{=}\PY{n}{pob}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}listgeneraciones=[]}
+    \PY{n}{toleMin}\PY{o}{=} \PY{l+m+mf}{0.001}
+    \PY{n}{toleCambio}\PY{o}{=} \PY{l+m+mf}{0.1}
+    \PY{c+c1}{\PYZsh{}\PYZsh{} Seccion que elige un indice para cortar en cruza 2 y n puntos por generacion}
+    \PY{n}{size\PYZus{}cut}\PY{o}{=}\PY{l+m+mi}{4}
+    \PY{n}{cutinrange} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{oldG}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{size\PYZus{}cut}
+    \PY{n}{cut\PYZus{}index} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION QUE ELIGE PUNTOS DE CORTE PARA CRUZA 2 y N\PYZhy{}PUNTOS}
+    \PY{n}{indices}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}    \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{} se eligen 2 indices de corte y se ordenan para iniciar de izquierda a derecha}
+    \PY{n}{indices}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{indices}\PY{p}{)}
+    \PY{n}{indice}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)}    \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{} se eligen 3 indices de corte y se ordenan para iniciar de izquierda a derecha}
+    \PY{n}{indice}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{indice}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} lo hace aleatorio cada nueva generacion}
+    \PY{n}{cromos}\PY{o}{=} \PY{n}{oldG}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{k}{if} \PY{n}{tipoS} \PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}
+        \PY{n}{newGen}\PY{o}{=} \PY{n}{selTorneo}\PY{p}{(}\PY{n}{cromos}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{k}{if} \PY{n}{tipoS} \PY{o}{==}\PY{l+m+mi}{2}\PY{p}{:}
+        \PY{n}{newGen}\PY{o}{=} \PY{n}{selRank}\PY{p}{(}\PY{n}{cromos}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{k}{if} \PY{n}{tipoS} \PY{o}{==}\PY{l+m+mi}{3}\PY{p}{:}
+        \PY{n}{newGen}\PY{o}{=} \PY{n}{selMonogamico}\PY{p}{(}\PY{n}{cromos}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{k}{if} \PY{n}{tipoS} \PY{o}{==}\PY{l+m+mi}{4}\PY{p}{:}
+        \PY{n}{newGen}\PY{o}{=} \PY{n}{selRuleta}\PY{p}{(}\PY{n}{cromos}\PY{p}{,}\PY{n}{tipoC}\PY{p}{,}\PY{n}{indices}\PY{p}{,}\PY{n}{indice}\PY{p}{,}\PY{n}{odds}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION EVALUACION Y ORDENACION DE NUEVA GENERACION \PYZsq{}newGen\PYZsq{}}
+    \PY{n}{pobNueva}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{A} \PY{o+ow}{in} \PY{n}{newGen}\PY{p}{:}
+        \PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+        \PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}
+        \PY{n}{Fx}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{p}{,}\PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{p}{)}
+        \PY{n}{pobNueva} \PY{o}{+}\PY{o}{=}\PY{p}{[}\PY{p}{(}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{A}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,}\PY{n}{Fx}\PY{p}{)}\PY{p}{]}
+    \PY{n}{pobNueva}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{pobNueva}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{pobNueva}\PY{p}{:} \PY{n}{pobNueva}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION COMBINACION GENERACION ANTERIOR Y NUEVA}
+    \PY{n}{newPoblacion}\PY{o}{=}\PY{p}{[}\PY{p}{]}                                   \PY{c+c1}{\PYZsh{} Se producen 100 individuos}
+    \PY{k}{for} \PY{n}{indiv1}\PY{p}{,} \PY{n}{indiv2} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{pobNueva}\PY{p}{,} \PY{n}{oldG}\PY{p}{)}\PY{p}{:}        \PY{c+c1}{\PYZsh{} Aqui se mezclan las primeras}
+        \PY{n}{newPoblacion} \PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{indiv1}\PY{p}{,}\PY{n}{indiv2}\PY{p}{]}               \PY{c+c1}{\PYZsh{} 2 generaciones y se ordenan los mas aptos para su cruza}
+    \PY{n}{newPoblacion}\PY{o}{=}\PY{n+nb}{sorted}\PY{p}{(}\PY{n}{newPoblacion}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{newPoblacion}\PY{p}{:} \PY{n}{newPoblacion}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}        
+    \PY{n}{pob\PYZus{}Mejor}\PY{o}{=}\PY{n}{newPoblacion}\PY{p}{[}\PY{p}{:}\PY{n+nb}{len}\PY{p}{(}\PY{n}{newPoblacion}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{2}\PY{p}{]}     \PY{c+c1}{\PYZsh{} Seleccion de los mejores individuos igual a n/2}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECCION MUTACION}
+    \PY{n}{toMolt}\PY{o}{=} \PY{p}{(}\PY{l+m+mi}{5}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{pob\PYZus{}Mejor}\PY{p}{)}\PY{p}{)}\PY{o}{/}\PY{o}{/}\PY{l+m+mi}{100}  \PY{c+c1}{\PYZsh{} Seleccion de porcentaje de individuos a mutar}
+    \PY{n}{mut}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{toMolt}\PY{p}{)}\PY{p}{:}
+        \PY{n}{cr}\PY{o}{=} \PY{n}{random}\PY{o}{.}\PY{n}{choice}\PY{p}{(}\PY{n}{pob\PYZus{}Mejor}\PY{p}{)}
+        \PY{n}{mut}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{cr}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{]}
+        \PY{n}{pob\PYZus{}Mejor}\PY{o}{.}\PY{n}{remove}\PY{p}{(}\PY{n}{cr}\PY{p}{)}
+
+    \PY{n}{molts}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{k}{for} \PY{n}{m} \PY{o+ow}{in} \PY{n}{mut}\PY{p}{:}
+        \PY{k}{if} \PY{n}{tipoM}\PY{o}{==}\PY{l+m+mi}{0}\PY{p}{:}    \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} TIPO DE MUTACION SCRAMBLE}
+            \PY{n}{molt1}\PY{p}{,}\PY{n}{molt2}\PY{p}{,}\PY{n}{molt3}\PY{p}{,}\PY{n}{molt4}\PY{p}{,}\PY{n}{molt5}\PY{p}{,}\PY{n}{molt6}\PY{o}{=} \PY{n}{mutacion\PYZus{}Scramble}\PY{p}{(}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,}\PY{n}{size\PYZus{}cut}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{,}\PY{n}{cut\PYZus{}index}\PY{p}{)}
+        \PY{k}{if} \PY{n}{tipoM}\PY{o}{==}\PY{l+m+mi}{1}\PY{p}{:}    \PY{c+c1}{\PYZsh{} \PYZlt{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} TIPO DE MUTACION INVERSION}
+            \PY{n}{molt1}\PY{p}{,}\PY{n}{molt2}\PY{p}{,}\PY{n}{molt3}\PY{p}{,}\PY{n}{molt4}\PY{p}{,}\PY{n}{molt5}\PY{p}{,}\PY{n}{molt6}\PY{o}{=} \PY{n}{mutacion\PYZus{}Inversion}\PY{p}{(}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{m}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,}\PY{n}{size\PYZus{}cut}\PY{p}{,}\PY{n}{cutinrange}\PY{p}{,}\PY{n}{cut\PYZus{}index}\PY{p}{)}
+
+        \PY{n}{fx1}\PY{p}{,}\PY{n}{fx2}\PY{p}{,}\PY{n}{fx3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt3}\PY{p}{)}
+        \PY{n}{fx4}\PY{p}{,}\PY{n}{fx5}\PY{p}{,}\PY{n}{fx6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt5}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{molt6}\PY{p}{)}
+        \PY{n}{Fx1x2}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{fx1}\PY{p}{,}\PY{n}{fx2}\PY{p}{,}\PY{n}{fx3}\PY{p}{,}\PY{n}{fx4}\PY{p}{,}\PY{n}{fx5}\PY{p}{,}\PY{n}{fx6}\PY{p}{)}
+        \PY{n}{molts}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{molt1}\PY{p}{,}\PY{n}{molt2}\PY{p}{,}\PY{n}{molt3}\PY{p}{,}\PY{n}{molt4}\PY{p}{,}\PY{n}{molt5}\PY{p}{,}\PY{n}{molt6}\PY{p}{,}\PY{n}{Fx1x2}\PY{p}{)}\PY{p}{]}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} REINSERCION DE CROMOSOMAS MUTADOS  AL POBLACION NUEVA MEJORADA}
+    \PY{k}{for} \PY{n}{sdr} \PY{o+ow}{in} \PY{n}{molts}\PY{p}{:}
+        \PY{n}{indice}\PY{o}{=}\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n+nb}{len}\PY{p}{(}\PY{n}{pob\PYZus{}Mejor}\PY{p}{)}\PY{p}{)}
+        \PY{n}{pob\PYZus{}Mejor}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n}{indice}\PY{p}{,}\PY{n}{sdr}\PY{p}{)}
+    \PY{n}{pob\PYZus{}Mejor}\PY{o}{=}\PY{n+nb}{sorted}\PY{p}{(}\PY{n}{pob\PYZus{}Mejor}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{pob\PYZus{}Mejor}\PY{p}{:} \PY{n}{pob\PYZus{}Mejor}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} GUARDADO DE LISTA DE LISTAS DE valores flotantes}
+    \PY{n}{xn}\PY{o}{=} \PY{p}{[} \PY{p}{(}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{h}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{)} \PY{k}{for} \PY{n}{h} \PY{o+ow}{in} \PY{n}{oldG}\PY{p}{]}
+
+    \PY{n}{oldless}\PY{o}{=} \PY{n}{oldG}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}
+    \PY{n}{newless}\PY{o}{=} \PY{n}{pob\PYZus{}Mejor}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}
+    \PY{k}{if} \PY{n}{newless} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{oldless}\PY{p}{:}
+        \PY{n}{oldG} \PY{o}{=} \PY{n}{pob\PYZus{}Mejor}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{k}{if} \PY{n}{newless} \PY{o}{\PYZgt{}} \PY{n}{oldless}\PY{p}{:}
+        \PY{n}{oldG} \PY{o}{=} \PY{n}{oldG}
+
+    \PY{k}{return} \PY{n}{oldG}\PY{p}{,}\PY{n}{xn}\PY{p}{,}\PY{n}{odds}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-cruza-marinero-e-isleuxf1o}{%
+\section{Funcion CRUZA MARINERO E
+ISLEÑO}\label{funcion-cruza-marinero-e-isleuxf1o}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{cruza\PYZus{}Marinero}\PY{p}{(}\PY{n}{marino}\PY{p}{,}\PY{n}{isleño}\PY{p}{,}\PY{n}{indice}\PY{p}{)}\PY{p}{:}
+    \PY{n}{hab1}\PY{o}{=} \PY{n}{marino}
+    \PY{n}{hab2}\PY{o}{=} \PY{n}{isleño}
+
+    \PY{n}{gx1}\PY{p}{,}\PY{n}{gx2}\PY{p}{,}\PY{n}{gx3}\PY{o}{=} \PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de primer sexteto de cromosomas a}
+    \PY{n}{gx4}\PY{p}{,}\PY{n}{gx5}\PY{p}{,}\PY{n}{gx6}\PY{o}{=} \PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{hab1}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cruzar }
+
+    \PY{n}{gxx1}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{gxx3}\PY{o}{=} \PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Seleccion de Segundo sexteto de}
+    \PY{n}{gxx4}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{gxx6}\PY{o}{=} \PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{hab2}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]} \PY{c+c1}{\PYZsh{} cromosomas a cruzar}
+
+    \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx1}\PY{p}{,}\PY{n}{gxx1}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{n}{offx2}\PY{p}{,}\PY{n}{offxx2}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx2}\PY{p}{,}\PY{n}{gxx2}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{n}{offx3}\PY{p}{,}\PY{n}{offxx3}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx3}\PY{p}{,}\PY{n}{gxx3}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{n}{offx4}\PY{p}{,}\PY{n}{offxx4}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx4}\PY{p}{,}\PY{n}{gxx4}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{n}{offx5}\PY{p}{,}\PY{n}{offxx5}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx5}\PY{p}{,}\PY{n}{gxx5}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+    \PY{n}{offx6}\PY{p}{,}\PY{n}{offxx6}\PY{o}{=} \PY{n}{crossNpoints}\PY{p}{(}\PY{n}{gx6}\PY{p}{,}\PY{n}{gxx6}\PY{p}{,}\PY{n}{indice}\PY{p}{)}
+
+    \PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx3}\PY{p}{)}
+    \PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx5}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offx6}\PY{p}{)}
+    \PY{n}{Fx}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{p}{,}\PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{p}{)}
+    \PY{n}{descendiente1}\PY{o}{=} \PY{p}{(}\PY{n}{offx1}\PY{p}{,}\PY{n}{offx2}\PY{p}{,}\PY{n}{offx3}\PY{p}{,}\PY{n}{offx4}\PY{p}{,}\PY{n}{offx5}\PY{p}{,}\PY{n}{offx6}\PY{p}{,}\PY{n}{Fx}\PY{p}{)}
+
+    \PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx1}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx2}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx5}\PY{p}{)}
+    \PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{o}{=} \PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx3}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx4}\PY{p}{)}\PY{p}{,}\PY{n}{lis2decimal}\PY{p}{(}\PY{n}{offxx6}\PY{p}{)}
+    \PY{n}{Fx}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{A1}\PY{p}{,}\PY{n}{A2}\PY{p}{,}\PY{n}{A3}\PY{p}{,}\PY{n}{A4}\PY{p}{,}\PY{n}{A5}\PY{p}{,}\PY{n}{A6}\PY{p}{)}
+    \PY{n}{descendiente2}\PY{o}{=} \PY{p}{(}\PY{n}{offxx1}\PY{p}{,}\PY{n}{offxx2}\PY{p}{,}\PY{n}{offxx3}\PY{p}{,}\PY{n}{offxx4}\PY{p}{,}\PY{n}{offxx5}\PY{p}{,}\PY{n}{offxx6}\PY{p}{,}\PY{n}{Fx}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{descendiente1}\PY{p}{,}\PY{n}{descendiente2}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-main-sin-interaccion-entre-islas}{%
+\section{Funcion MAIN SIN INTERACCION ENTRE
+ISLAS}\label{funcion-main-sin-interaccion-entre-islas}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Gener}\PY{o}{=} \PY{l+m+mi}{200}
+\PY{n}{sel1}\PY{p}{,}\PY{n}{Cruza1}\PY{p}{,}\PY{n}{Muta1} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE SELECCION: sel1= TORNEO, sel2= RANK, sel3= MONOGAMICO, sel4= RULETA,}
+\PY{n}{sel2}\PY{p}{,}\PY{n}{Cruza2}\PY{p}{,}\PY{n}{Muta2} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE CRUZA:   Cruza1= 0 \PYZhy{}\PYZhy{}\PYZgt{} cruza 2 puntos; Cruza1= 1 \PYZhy{}\PYZhy{}\PYZgt{} cruza N puntos;,}
+\PY{n}{sel3}\PY{p}{,}\PY{n}{Cruza3}\PY{p}{,}\PY{n}{Muta3} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE MUTACION: Muta1= 0 \PYZhy{}\PYZhy{}\PYZgt{} SCRAMBLE;        Muta1= 1 \PYZhy{}\PYZhy{}\PYZgt{} INVERSION DE ALELOS}
+\PY{c+c1}{\PYZsh{}sel4,Cruza4,Muta4 = 4,0,0}
+\PY{n}{numPoblacion}\PY{o}{=} \PY{l+m+mi}{100}
+
+\PY{n}{ini1}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+\PY{n}{population1}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{n}{population2}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{n}{population3}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}population4,fit4= pobisla(numPoblacion)}
+\PY{n}{lisgraph1}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{lisgraph2}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{lisgraph3}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} lisgraph4= []}
+\PY{n}{toleMin}\PY{o}{=} \PY{l+m+mf}{0.0001}
+\PY{n}{seasons}\PY{p}{,}\PY{n}{moons}\PY{p}{,}\PY{n}{winters}\PY{o}{=} \PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{7}
+\PY{k}{for} \PY{n}{g} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{Gener}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generacion \PYZsh{}: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Distancia Minima: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{population1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population2[0][6]))}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population3[0][6]))}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population4[0][6]))}
+    \PY{n}{ini2}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}Torneo}\PY{p}{,}\PY{n}{data1}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population1}\PY{p}{,}\PY{n}{sel1}\PY{p}{,}\PY{n}{Cruza1}\PY{p}{,}\PY{n}{Muta1}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin2}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{ini3}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}Rank}\PY{p}{,}\PY{n}{data2}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population2}\PY{p}{,}\PY{n}{sel2}\PY{p}{,}\PY{n}{Cruza2}\PY{p}{,}\PY{n}{Muta2}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin3}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{ini4}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}RanMon}\PY{p}{,}\PY{n}{data3}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population3}\PY{p}{,}\PY{n}{sel3}\PY{p}{,}\PY{n}{Cruza3}\PY{p}{,}\PY{n}{Muta3}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin4}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} RECOPILACION DE DATOS POR GENERACION POR CADA ISLA PARA GRAFICAS}
+    \PY{n}{lisgraph1}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data1}\PY{p}{]}
+    \PY{n}{lisgraph2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data2}\PY{p}{]}
+    \PY{n}{lisgraph3}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data3}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}     lisgraph4+= [data4]}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} CRITERIO DE PARO DELTA}
+    \PY{n}{Total1}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}Torneo}\PY{p}{]}
+    \PY{n}{Total2}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}Rank}\PY{p}{]}
+    \PY{n}{Total3}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}RanMon}\PY{p}{]}
+    \PY{k}{if} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total1}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin} \PY{o+ow}{and} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total2}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin} \PY{o+ow}{and} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total3}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tolerancia minima permitida alcanzada, paro en generacion \PYZsh{}: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{k}{break}
+    
+    \PY{n}{population1}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}
+    \PY{n}{population2}\PY{o}{=} \PY{n}{m\PYZus{}Rank}
+    \PY{n}{population3}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}
+    
+\PY{n}{fin1}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     population4,fit4= mejores\PYZus{}Rul,fit4}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin1}\PY{o}{\PYZhy{}}\PY{n}{ini1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin2}\PY{o}{\PYZhy{}}\PY{n}{ini2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin3}\PY{o}{\PYZhy{}}\PY{n}{ini3}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin4}\PY{o}{\PYZhy{}}\PY{n}{ini4}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lo que se imprime cuando retorna de llamada a funcion... se muestran 10 primeros isleños}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+\PY{n}{solo10}\PY{o}{=} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{k}{for} \PY{n}{xj}\PY{p}{,}\PY{n}{solo} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{population1}\PY{p}{,}\PY{n}{solo10}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{funcion-main-con-interaccion-entre-islas}{%
+\section{Funcion MAIN CON INTERACCION ENTRE
+ISLAS}\label{funcion-main-con-interaccion-entre-islas}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Gener}\PY{o}{=} \PY{l+m+mi}{200}
+\PY{n}{sel1}\PY{p}{,}\PY{n}{Cruza1}\PY{p}{,}\PY{n}{Muta1} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE SELECCION: sel1= TORNEO, sel2= RANK, sel3= MONOGAMICO, sel4= RULETA,}
+\PY{n}{sel2}\PY{p}{,}\PY{n}{Cruza2}\PY{p}{,}\PY{n}{Muta2} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE CRUZA:   Cruza1= 0 \PYZhy{}\PYZhy{}\PYZgt{} cruza 2 puntos; Cruza1= 1 \PYZhy{}\PYZhy{}\PYZgt{} cruza N puntos;,}
+\PY{n}{sel3}\PY{p}{,}\PY{n}{Cruza3}\PY{p}{,}\PY{n}{Muta3} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}  \PY{c+c1}{\PYZsh{} TIPO DE MUTACION: Muta1= 0 \PYZhy{}\PYZhy{}\PYZgt{} SCRAMBLE;        Muta1= 1 \PYZhy{}\PYZhy{}\PYZgt{} INVERSION DE ALELOS}
+\PY{c+c1}{\PYZsh{}sel4,Cruza4,Muta4 = 4,0,0}
+\PY{n}{numPoblacion}\PY{o}{=} \PY{l+m+mi}{100}
+
+\PY{n}{ini1}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+\PY{n}{population1}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{n}{population2}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{n}{population3}\PY{p}{,}\PY{n}{fit}\PY{o}{=} \PY{n}{pobisla}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}population4,fit4= pobisla(numPoblacion)}
+\PY{n}{lisgraph1}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{lisgraph2}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{lisgraph3}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} lisgraph4= []}
+\PY{n}{toleMin}\PY{o}{=} \PY{l+m+mf}{0.0001}
+\PY{n}{seasons}\PY{p}{,}\PY{n}{moons}\PY{p}{,}\PY{n}{winters}\PY{o}{=} \PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{7}
+\PY{k}{for} \PY{n}{g} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{Gener}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generacion \PYZsh{}: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Distancia Minima: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{population1}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population2[0][6]))}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population3[0][6]))}
+\PY{c+c1}{\PYZsh{}     print(\PYZsq{}Generacion \PYZsh{}: \PYZsq{},g+1, \PYZsq{}Distancia Minima: \PYZsq{},\PYZsq{}\PYZob{}:.2f\PYZcb{}\PYZsq{}.format(population4[0][6]))}
+    \PY{n}{ini2}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}Torneo}\PY{p}{,}\PY{n}{data1}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population1}\PY{p}{,}\PY{n}{sel1}\PY{p}{,}\PY{n}{Cruza1}\PY{p}{,}\PY{n}{Muta1}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin2}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{ini3}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}Rank}\PY{p}{,}\PY{n}{data2}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population2}\PY{p}{,}\PY{n}{sel2}\PY{p}{,}\PY{n}{Cruza2}\PY{p}{,}\PY{n}{Muta2}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin3}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    
+    \PY{n}{ini4}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{m\PYZus{}RanMon}\PY{p}{,}\PY{n}{data3}\PY{p}{,}\PY{n}{fit} \PY{o}{=} \PY{n}{evolucion}\PY{p}{(}\PY{n}{population3}\PY{p}{,}\PY{n}{sel3}\PY{p}{,}\PY{n}{Cruza3}\PY{p}{,}\PY{n}{Muta3}\PY{p}{,}\PY{n}{fit}\PY{p}{)}
+    \PY{n}{fin4}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} RECOPILACION DE DATOS POR GENERACION POR CADA ISLA PARA GRAFICAS}
+    \PY{n}{lisgraph1}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data1}\PY{p}{]}
+    \PY{n}{lisgraph2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data2}\PY{p}{]}
+    \PY{n}{lisgraph3}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{data3}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}     lisgraph4+= [data4]}
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} ************************ MIGRACION ENTRE MEJOR A PEOR ISLA DE ACUERDO AL PROMEDIO DE CADA ISLA CADA 5 GENERACIONES}
+    \PY{k}{if} \PY{p}{(}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{\PYZpc{}}\PY{k}{seasons} ==0:
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MIGRACION ENTRE MEJOR A PEOR ISLA DE ACUERDO AL PROMEDIO DE CADA ISLA}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} Obtencion de medias para conocer a la peor y mejor isla \PYZsh{}\PYZsh{}\PYZsh{}}
+        \PY{n}{datum1}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data1}\PY{p}{]}
+        \PY{n}{datum2}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data2}\PY{p}{]}
+        \PY{n}{datum3}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data3}\PY{p}{]}
+        \PY{n}{d1}\PY{p}{,}\PY{n}{d2}\PY{p}{,}\PY{n}{d3}\PY{o}{=} \PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum1}\PY{p}{)}\PY{p}{,}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum2}\PY{p}{)}\PY{p}{,}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum3}\PY{p}{)} \PY{c+c1}{\PYZsh{} Obtencion de promedios}
+        \PY{n}{w\PYZus{}isla}\PY{o}{=}\PY{p}{[}\PY{n}{d1}\PY{p}{,}\PY{n}{d2}\PY{p}{,}\PY{n}{d3}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} PEOR ISLA PROMEDIO}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{migraw1}\PY{p}{,}\PY{n}{migraw2}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)} \PY{c+c1}{\PYZsh{} EXTRAE EL PRIMER ELEMENTO Y DESPUES EL SEGUNDO, SON IGUALES}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}                          \PY{c+c1}{\PYZsh{} YA QUE SE ELIMINA EL ELEMENTO EN ESE INDICE Y SE DESPLAZA}
+            \PY{n}{migraw1}\PY{p}{,}\PY{n}{migraw2}\PY{o}{=} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{migraw1}\PY{p}{,}\PY{n}{migraw2}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} MEJOR ISLA PROMEDIO    }
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}   \PY{c+c1}{\PYZsh{} len(m\PYZus{}seleccion) indica el indice donde se insertan los migrantes en esta caso al final}
+            \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)} \PY{c+c1}{\PYZsh{} INSERCION DE MIGRANTE AL FINAL DE }
+            \PY{n}{migrab1}\PY{p}{,}\PY{n}{migrab2}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}                             \PY{c+c1}{\PYZsh{} ISLA CON MEJOR PROMEDIO PARA INTER\PYZhy{}}
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}                                               \PY{c+c1}{\PYZsh{} CAMBIAR ENTRE PEOR Y MEJOR ISLA}
+            \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)}
+            \PY{n}{migrab1}\PY{p}{,}\PY{n}{migrab2}\PY{o}{=} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)}
+            \PY{n}{migrab1}\PY{p}{,}\PY{n}{migrab2}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+    
+        \PY{c+c1}{\PYZsh{}\PYZsh{} INSERCION DE MIGRANTES DE MEJOR ISLA A LA PEOR ISLA PROMEDIO    }
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{migraw1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{migraw2}\PY{p}{)}
+            
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} ======================== MIGRACION CIRCULAR ALEATORIO ENTRE ISLAS CADA 3 GENERACIONES}
+    \PY{k}{if} \PY{p}{(}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{\PYZpc{}}\PY{k}{moons}== 0:
+        \PY{n}{ci}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{numPoblacion}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)} \PY{c+c1}{\PYZsh{} SE ELIGEN UN ISLEÑO ALEATORIO DE CADA ISLA}
+        \PY{n}{ci}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{ci}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MIGRACION Circular entre islas cada 3 generaciones}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Se extrae un cromosoma aleatorio de cada isla.}
+        \PY{n}{migra\PYZus{}cir1}\PY{p}{,}\PY{n}{migra\PYZus{}cir2}\PY{p}{,}\PY{n}{migra\PYZus{}cir3}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{n}{ci}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{n}{ci}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{n}{ci}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} se reinserta cromosoma a cada isla\PYZhy{}lista, con \PYZsq{}insert(index,elemento)\PYZsq{}}
+        \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{migra\PYZus{}cir1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{migra\PYZus{}cir2}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{migra\PYZus{}cir3}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{} VISITANTE MARINERO ENTRE ISLAS DE PEOR A MEJOR }
+    \PY{k}{if} \PY{p}{(}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{\PYZpc{}}\PY{k}{winters}== 0:
+        \PY{n}{indice}\PY{o}{=} \PY{n}{sample}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{)} \PY{c+c1}{\PYZsh{} Se obtienen los indices para realizar CRUZA N PUNTOS}
+        \PY{n}{indice}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{indice}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MIGRACION VISITANTE MARINERO entre islas cada 5 generaciones}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} SE OBTIENEN LAS MEDIAS PARA CONOCER LA MEJOR Y PEOR ISLA \PYZsh{}\PYZsh{}\PYZsh{}}
+        \PY{n}{datum1}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data1}\PY{p}{]}
+        \PY{n}{datum2}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data2}\PY{p}{]}
+        \PY{n}{datum3}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{data3}\PY{p}{]}
+        \PY{n}{d1}\PY{p}{,}\PY{n}{d2}\PY{p}{,}\PY{n}{d3}\PY{o}{=} \PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum1}\PY{p}{)}\PY{p}{,}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum2}\PY{p}{)}\PY{p}{,}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{datum3}\PY{p}{)} \PY{c+c1}{\PYZsh{} Obtencion de promedios}
+        \PY{n}{w\PYZus{}isla}\PY{o}{=}\PY{p}{[}\PY{n}{d1}\PY{p}{,}\PY{n}{d2}\PY{p}{,}\PY{n}{d3}\PY{p}{]}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} MEJOR ISLA PROMEDIO    }
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{Marino}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}        \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}
+            \PY{n}{Marino}\PY{o}{=} \PY{n}{m\PYZus{}Rank}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}          \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        \PY{k}{if} \PY{n+nb}{min}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{Marino}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}        \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} PEOR ISLA PROMEDIO}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{Isleño}\PY{p}{,}\PY{n}{h}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}     \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:} 
+            \PY{n}{Isleño}\PY{p}{,}\PY{n}{h}\PY{o}{=} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}         \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{Isleño}\PY{p}{,}\PY{n}{h}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{pop}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}     \PY{c+c1}{\PYZsh{} ISLEÑO CON MEJOR PROMEDIO PARA INTERCAMBIAR GENES}
+        
+        \PY{c+c1}{\PYZsh{}\PYZsh{} CRUZA N PUNTOS}
+        \PY{n}{offx1}\PY{p}{,}\PY{n}{offxx1}\PY{o}{=} \PY{n}{cruza\PYZus{}Marinero}\PY{p}{(}\PY{n}{Marino}\PY{p}{,}\PY{n}{Isleño}\PY{p}{,}\PY{n}{indice}\PY{p}{)}    \PY{c+c1}{\PYZsh{} Cruzamiento por n puntos para obtener nuevos y rellenar peor ISLA}
+
+        \PY{c+c1}{\PYZsh{}\PYZsh{} REINSERCION DE DESCENDIENTE NUEVOS A PEOR ISLA PROMEDIO            }
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{offx1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Torneo}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{)}\PY{p}{,}\PY{n}{offxx1}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{offx1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}Rank}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{)}\PY{p}{,}\PY{n}{offxx1}\PY{p}{)}
+        \PY{k}{if} \PY{n+nb}{max}\PY{p}{(}\PY{n}{w\PYZus{}isla}\PY{p}{)}\PY{o}{==} \PY{n}{w\PYZus{}isla}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{:}
+            \PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{offx1}\PY{p}{)}\PY{p}{,}\PY{n}{m\PYZus{}RanMon}\PY{o}{.}\PY{n}{insert}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{)}\PY{p}{,}\PY{n}{offxx1}\PY{p}{)}
+            
+    \PY{c+c1}{\PYZsh{} Ordenamiento de poblacion antes de entrar a evolucionar nuevamente}
+    \PY{n}{m\PYZus{}Torneo}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{m\PYZus{}Torneo}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{m\PYZus{}Torneo}\PY{p}{:} \PY{n}{m\PYZus{}Torneo}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+    \PY{n}{m\PYZus{}Rank}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{m\PYZus{}Rank}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{m\PYZus{}Rank}\PY{p}{:} \PY{n}{m\PYZus{}Rank}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+    \PY{n}{m\PYZus{}RanMon}\PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n}{m\PYZus{}RanMon}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{m\PYZus{}RanMon}\PY{p}{:} \PY{n}{m\PYZus{}RanMon}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{,} \PY{n}{reverse}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} CRITERIO DE PARO DELTA}
+    \PY{n}{Total1}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}Torneo}\PY{p}{]}
+    \PY{n}{Total2}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}Rank}\PY{p}{]}
+    \PY{n}{Total3}\PY{o}{=} \PY{p}{[} \PY{n}{p}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]} \PY{k}{for} \PY{n}{p} \PY{o+ow}{in} \PY{n}{m\PYZus{}RanMon}\PY{p}{]}
+    \PY{k}{if} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total1}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin} \PY{o+ow}{and} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total2}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin} \PY{o+ow}{and} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{Total3}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{n}{toleMin}\PY{p}{:}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tolerancia minima permitida alcanzada, paro en generacion \PYZsh{}: }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{g}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{k}{break}
+    
+    \PY{n}{population1}\PY{o}{=} \PY{n}{m\PYZus{}Torneo}
+    \PY{n}{population2}\PY{o}{=} \PY{n}{m\PYZus{}Rank}
+    \PY{n}{population3}\PY{o}{=} \PY{n}{m\PYZus{}RanMon}
+\PY{n}{fin1}\PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}     population4,fit4= mejores\PYZus{}Rul,fit4}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin1}\PY{o}{\PYZhy{}}\PY{n}{ini1}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin2}\PY{o}{\PYZhy{}}\PY{n}{ini2}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin3}\PY{o}{\PYZhy{}}\PY{n}{ini3}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{n}{fin4}\PY{o}{\PYZhy{}}\PY{n}{ini4}\PY{p}{)}
+
+\PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lo que se imprime cuando retorna de llamada a funcion... se muestran 10 primeros isleños}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
+\PY{n}{solo10}\PY{o}{=} \PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{]}
+\PY{k}{for} \PY{n}{xj}\PY{p}{,}\PY{n}{solo} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{population1}\PY{p}{,}\PY{n}{solo10}\PY{p}{)}\PY{p}{:}
+    \PY{n+nb}{print}\PY{p}{(}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{xj}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{graficas-de-evolucion-con-tres-tipos-de-seleccion}{%
+\section{Graficas de evolucion con tres Tipos de
+seleccion}\label{graficas-de-evolucion-con-tres-tipos-de-seleccion}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{topGeneration1}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{topGeneration2}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{topGeneration3}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{topGeneration4}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{topG1\PYZus{}fx1x2}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{topG2\PYZus{}fx1x2}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{topG3\PYZus{}fx1x2}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{topG4\PYZus{}fx1x2}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{n}{G}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{n}{axisx}\PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{c+c1}{\PYZsh{}for b,e,s,t in zip(lisgraph1,lisgraph2,lisgraph3,lisgraph4):}
+\PY{k}{for} \PY{n}{b}\PY{p}{,}\PY{n}{e}\PY{p}{,}\PY{n}{s} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{lisgraph1}\PY{p}{,}\PY{n}{lisgraph2}\PY{p}{,}\PY{n}{lisgraph3}\PY{p}{)}\PY{p}{:}
+    \PY{n}{topG1\PYZus{}fx1x2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{b}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{]}
+    \PY{n}{topG2\PYZus{}fx1x2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{e}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{]}
+    \PY{n}{topG3\PYZus{}fx1x2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{s}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}topG4\PYZus{}fx1x2+= [Function\PYZus{}Rastrigin(t[0][0],t[0][1],t[0][2],t[0][3],t[0][4],t[0][5])]}
+    \PY{n}{axisx}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{G}\PY{p}{]}
+    \PY{n}{G}\PY{o}{+}\PY{o}{=}\PY{l+m+mi}{1}
+
+\PY{n}{g}\PY{o}{=}\PY{l+m+mi}{0}
+\PY{c+c1}{\PYZsh{}for r,f,v,w in zip(lisgraph1,lisgraph2,lisgraph3,lisgraph4):}
+\PY{n}{top1}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+\PY{k}{for} \PY{n}{r}\PY{p}{,}\PY{n}{f}\PY{p}{,}\PY{n}{v} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{lisgraph1}\PY{p}{,}\PY{n}{lisgraph2}\PY{p}{,}\PY{n}{lisgraph3}\PY{p}{)}\PY{p}{:}
+    \PY{n}{mediaGen1}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{mediaGen2}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{mediaGen3}\PY{o}{=}\PY{p}{[}\PY{p}{]}
+    \PY{n}{mean1}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{r}\PY{p}{]}
+    \PY{n}{mean2}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{f}\PY{p}{]}
+    \PY{n}{mean3}\PY{o}{=} \PY{p}{[}\PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]}\PY{p}{,}\PY{n}{q}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{]}\PY{p}{)} \PY{k}{for} \PY{n}{q} \PY{o+ow}{in} \PY{n}{v}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}mean1= [Function\PYZus{}Rastrigin(q[0],q[1],q[2],q[3],q[4],q[5]) for q in r]}
+    \PY{n}{topGeneration1}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{mean1}\PY{p}{)}\PY{p}{]}
+    \PY{n}{topGeneration2}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{mean2}\PY{p}{)}\PY{p}{]}
+    \PY{n}{topGeneration3}\PY{o}{+}\PY{o}{=} \PY{p}{[}\PY{n}{statistics}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{mean3}\PY{p}{)}\PY{p}{]}
+    \PY{c+c1}{\PYZsh{}topGeneration4+= [statistics.mean(mean4)]}
+    \PY{n}{g}\PY{o}{+}\PY{o}{=}\PY{l+m+mi}{1}
+
+\PY{n}{minimo}\PY{o}{=} \PY{p}{[}\PY{n}{topG1\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topG2\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topG3\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}
+\PY{n}{minimo1}\PY{o}{=} \PY{p}{[}\PY{n}{topGeneration1}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topGeneration2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topGeneration3}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}
+\PY{n}{less}\PY{o}{=} \PY{n+nb}{min}\PY{p}{(}\PY{n}{minimo}\PY{p}{)}
+\PY{n}{less1}\PY{o}{=} \PY{n+nb}{min}\PY{p}{(}\PY{n}{minimo1}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{} GRAFICA DE TOP POR ISLAS}
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topG1\PYZus{}fx1x2}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{darkgreen}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Torneo}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topG2\PYZus{}fx1x2}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Rank}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topG3\PYZus{}fx1x2}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{yellowgreen}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Monogamico}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topG1\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Torneo}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{7}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topG2\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Rank}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topG3\PYZus{}fx1x2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Monogamico}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{9}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Evolucion de ARCHIPIELAGO, TOP }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{ Isleños, \PYZsh{} Generaciones: }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{axisx}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZpc{}}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}\PY{p}{,}\PY{n}{fontweight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bold}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{less}\PY{p}{,}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{less}\PY{p}{)}\PY{p}{,}\PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{less}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generaciones }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Menores: }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{minimo}\PY{p}{)}\PY{p}{,}\PY{n}{font}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Arial}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{11}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{F(x1,x2)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{font}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Arial}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{} GRAFICA DE MEDIAS}
+\PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZhy{}\PYZhy{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linewidth} \PY{o}{=} \PY{l+m+mf}{0.5}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topGeneration1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{darkred}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Media Torneo}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topGeneration2}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Media Rank}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{axisx}\PY{p}{,}\PY{n}{topGeneration3}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{salmon}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Media Monogamico}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topGeneration1}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Torneo}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{7}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topGeneration2}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Rank}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{8}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{topGeneration3}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{k}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{label}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mejor Monogamico}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{9}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Evolucion de ARCHIPIELAGO, MEDIAS }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s1}{ Isleños, \PYZsh{} Generaciones: }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{axisx}\PY{p}{)}\PY{p}{)} \PY{o}{\PYZpc{}}\PY{p}{(}\PY{n}{numPoblacion}\PY{p}{)}\PY{p}{,}\PY{n}{fontweight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{bold}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{annotate}\PY{p}{(}\PY{n}{less1}\PY{p}{,}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{n}{less1}\PY{p}{)}\PY{p}{,}\PY{n}{xytext}\PY{o}{=}\PY{p}{(}\PY{n}{axisx}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{less1}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Generaciones }\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{Menores: }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{minimo1}\PY{p}{)}\PY{p}{,}\PY{n}{font}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Arial}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{11}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{F(x1,x2)}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{font}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Arial}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{grafica-3d-de-funcion-rastrigin}{%
+\section{GRAFICA 3D DE FUNCION
+RASTRIGIN}\label{grafica-3d-de-funcion-rastrigin}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{x1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}\PY{p}{,} \PY{l+m+mf}{5.12}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{)}     
+\PY{n}{x2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mf}{5.12}\PY{p}{,} \PY{l+m+mf}{5.12}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{)}
+\PY{n}{X}\PY{p}{,} \PY{n}{Y} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{meshgrid}\PY{p}{(}\PY{n}{x1}\PY{p}{,} \PY{n}{x2}\PY{p}{)} 
+\PY{n}{Z} \PY{o}{=} \PY{p}{(}\PY{n}{X}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{X}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PYZbs{}
+    \PY{p}{(}\PY{n}{Y}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2} \PY{o}{\PYZhy{}} \PY{l+m+mi}{10} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{cos}\PY{p}{(}\PY{l+m+mi}{2} \PY{o}{*} \PY{n}{np}\PY{o}{.}\PY{n}{pi} \PY{o}{*} \PY{n}{Y}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+m+mi}{20}
+\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}
+\PY{n}{optimo}\PY{o}{=} \PY{n}{Function\PYZus{}Rastrigin}\PY{p}{(}\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{figure} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{)}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} FIRST PLOT \PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}   se rota con clik izquierdo; se aumenta con click derecho}
+\PY{n}{axis} \PY{o}{=} \PY{n}{figure}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{121}\PY{p}{,} \PY{n}{projection}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3d}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{plot\PYZus{}surface}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{Z}\PY{p}{,} \PY{n}{rstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{terrain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{shade}\PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{false}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}plt.contour(x,y,results,cmap=\PYZsq{}Spectral\PYZsq{},offset=\PYZhy{}1,zorder=2)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Funcion RASTRIGIN DE 2 DIMENSIONES}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{scatter3D}\PY{p}{(}\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{optimo}\PY{p}{,}\PY{n}{s}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x1\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x2\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}zlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}f(x1,x2)\PYZdl{}   }\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{view\PYZus{}init}\PY{p}{(}\PY{l+m+mi}{90}\PY{p}{,}\PY{l+m+mi}{90}\PY{p}{)}    \PY{c+c1}{\PYZsh{} Ajusta como aparece inicialmente grafica en grados }
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{} SECOND PLOT \PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}\PYZsh{}  se rota con clik izquierdo; se aumenta con click derecho}
+\PY{n}{axis} \PY{o}{=} \PY{n}{figure}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{122}\PY{p}{,} \PY{n}{projection}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{3d}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{plot\PYZus{}surface}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{Z}\PY{p}{,} \PY{n}{rstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cstride}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{cmap}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{terrain}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{shade}\PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{false}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{c+c1}{\PYZsh{}plt.contour(x,y,results,cmap=\PYZsq{}Spectral\PYZsq{},offset=\PYZhy{}1,zorder=2)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Funcion RASTRIGIN DE 2 DIMENSIONES}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{scatter3D}\PY{p}{(}\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{optimo}\PY{p}{,}\PY{n}{s}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{zorder}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x1\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}x2\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{set\PYZus{}zlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}f(x1,x2)\PYZdl{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontweight} \PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bold}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{15}\PY{p}{)}
+\PY{n}{axis}\PY{o}{.}\PY{n}{view\PYZus{}init}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{210}\PY{p}{)}   \PY{c+c1}{\PYZsh{} Ajusta como aparece inicialmente grafica en grados}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}
+\PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlim}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
